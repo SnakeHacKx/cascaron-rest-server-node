@@ -35,9 +35,13 @@
         // Google Token | ID_TOKEN
         // console.log("id_token: ", response.credential);
 
+        // con window.location.origin se obtiene por decir de una manera el root de la url
+        // lo cual no importa si la url es http o https
+        const url = `${window.location.origin}/api/auth/google`;
+
         const body = { id_token: response.credential };
 
-        fetch("http://localhost:8080/api/auth/google", {
+        fetch(url, {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -57,7 +61,7 @@
         console.log(google.accounts.id);
         google.accounts.id.disableAutoSelect();
 
-        google.accounts.id.revoke(localStorage.getItem("email"), done => {
+        google.accounts.id.revoke(localStorage.getItem("email"), (done) => {
           localStorage.clear();
           location.reload();
         });
