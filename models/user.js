@@ -54,7 +54,8 @@ const UserSchema = Schema({
  */
 UserSchema.methods.toJSON = function () {
   // Con el ...user lo que hago es que el resto de parametros los pongo todos ahi (en el user)
-  const { __v, password, ...user } = this.toObject();
+  const { __v, password, _id, ...user } = this.toObject();
+  user.uid = _id;
   return user;
 }
 

@@ -6,7 +6,13 @@ import {
   existUserById,
   isValidRole,
 } from "../helpers/db-validators.js";
-import { validateFields } from "../middlewares/validate-field.js";
+
+import {
+  validateFields,
+  validateJWT,
+  hasAdminRole,
+  hasRole,
+} from "../middlewares/index.js";
 
 import {
   getUsers,
@@ -51,9 +57,12 @@ router.post(
 router.delete(
   "/:id",
   [
+    validateJWT,
+    // hasAdminRole,
+    hasRole("ADMIN_ROLE", "RECRUITER_ROLE"),
     check("id", "No es un ID válido").isMongoId(),
     check("id").custom(existUserById),
-    validateFields
+    validateFields,
   ],
   deleteUsers
 );

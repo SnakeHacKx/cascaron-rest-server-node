@@ -18,7 +18,7 @@ const getUsers = async (req = request, res = response) => {
 
   res.json({
     total,
-    users
+    users,
   });
 };
 
@@ -62,20 +62,18 @@ const patchUsers = (req, res = response) => {
   });
 };
 
-const deleteUsers = async(req, res = response) => {
-
+const deleteUsers = async (req, res = response) => {
   const { id } = req.params;
+
+  // const uid = req.uid;
 
   //! Borrar fisicamente (no recomendado)
   // const user = await User.findByIdAndDelete(id);
 
   //* Borrando cambiando el estado (recomendado)
   const user = await User.findByIdAndUpdate(id, { state: false });
-  
-  res.json({
-    id,
-    user
-  });
+
+  res.json(user);
 };
 
 export { getUsers, postUsers, patchUsers, deleteUsers, putUsers };

@@ -1,13 +1,17 @@
 import express from "express";
+import cors from "cors";
+
 import { router } from "../routes/users.js";
-import cors from 'cors';
+import { router_auth } from "../routes/auth.js";
 import { dbConnection } from "../database/config.js";
 
 class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
-    this.usersPath = '/api/users';
+
+    this.usersPath = "/api/users";
+    this.authPath = "/api/auth";
 
     // Conectar a la base de datos
     this.connectToDB();
@@ -22,7 +26,7 @@ class Server {
   /**
    * Metodo que manda a llamar a la base de datos
    */
-  async connectToDB() { 
+  async connectToDB() {
     await dbConnection();
   }
 
@@ -42,6 +46,7 @@ class Server {
    */
   routes() {
     this.app.use(this.usersPath, router);
+    this.app.use(this.authPath, router_auth);
   }
 
   listen() {
