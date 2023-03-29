@@ -24,7 +24,15 @@ const existUserById = async (id) => {
   }
 };
 
-// TODO: implementar esta validacion
+const existCategoryById = async (id) => {
+  const categoryExists = await User.findById(id);
+
+  if (!categoryExists) {
+    throw new Error(`La categoria con ${id} no existe en la base de datos`);
+  }
+};
+
+// TODO: Implementar esta validacion
 const validarJSON = (err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
       return res.status(400).send({ status: 404, message: err.message }); // Bad request
@@ -32,4 +40,4 @@ const validarJSON = (err, req, res, next) => {
   next();
 };
 
-export { isValidRole, emailAlreadyExists, existUserById };
+export { isValidRole, emailAlreadyExists, existUserById, existCategoryById };

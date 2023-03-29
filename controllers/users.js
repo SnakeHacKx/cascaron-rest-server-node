@@ -2,6 +2,9 @@ import { request, response } from "express";
 import bcryptjs from "bcryptjs";
 import User from "../models/user.js";
 
+/**
+ * Lista los usuarios
+ */
 const getUsers = async (req = request, res = response) => {
   // Argumentos opcionales
   const { limit = 5, from = 0 } = req.query;
@@ -22,7 +25,10 @@ const getUsers = async (req = request, res = response) => {
   });
 };
 
-const putUsers = async (req, res = response) => {
+/**
+ * Actualiza la información de un usuario
+ */
+const updateUser = async (req, res = response) => {
   const { id } = req.params; // este id es el que esta en la ruta del put en users.js
   const { _id, password, google, email, ...rest } = req.body; // Sacamos lo que no se debe actualizar
 
@@ -39,7 +45,10 @@ const putUsers = async (req, res = response) => {
   res.json(user);
 };
 
-const postUsers = async (req = request, res = response) => {
+/**
+ * Crea un nuevo usuario y lo guarda en base de datos
+ */
+const createNewUser = async (req = request, res = response) => {
   const { name, email, password, role } = req.body; // Esto es la información que solicita/manda el usuario
   const user = new User({ name, email, password, role });
 
@@ -56,24 +65,27 @@ const postUsers = async (req = request, res = response) => {
   });
 };
 
+/**
+ * Oculta un usuario de la base de datos cambiando el estado a false
+ */
+const deleteUsers = async (req, res = response) => {
+  const { id } = req.params;
+  
+  // const uid = req.uid;
+  
+  //! Borrar fisicamente (no recomendado)
+  // const user = await User.findByIdAndDelete(id);
+  
+  //* Borrando cambiando el estado (recomendado)
+  const user = await User.findByIdAndUpdate(id, { state: false });
+  
+  res.json(user);
+};
+
 const patchUsers = (req, res = response) => {
   res.json({
     msg: "PATCH API - controlador",
   });
 };
 
-const deleteUsers = async (req, res = response) => {
-  const { id } = req.params;
-
-  // const uid = req.uid;
-
-  //! Borrar fisicamente (no recomendado)
-  // const user = await User.findByIdAndDelete(id);
-
-  //* Borrando cambiando el estado (recomendado)
-  const user = await User.findByIdAndUpdate(id, { state: false });
-
-  res.json(user);
-};
-
-export { getUsers, postUsers, patchUsers, deleteUsers, putUsers };
+export { getUsers, createNewUser, patchUsers, deleteUsers, updateUser };

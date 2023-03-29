@@ -16,20 +16,21 @@ import {
 
 import {
   getUsers,
-  postUsers,
+  createNewUser,
   patchUsers,
   deleteUsers,
-  putUsers,
+  updateUser,
 } from "../controllers/users.js";
 
 // Esto no es una instancia porque no lleva la palabra new
 // solo se manda a llamara a la clase Router
-export const router = Router();
+export const router_users = Router();
 
 // router.cosoHTTP(ruta, middlewares para validaciones (opcional), controlador del coso HTTP);
 
-router.get("/", getUsers);
-router.put(
+router_users.get("/", getUsers);
+
+router_users.put(
   "/:id",
   [
     check("id", "No es un ID válido").isMongoId(),
@@ -37,9 +38,10 @@ router.put(
     check("role").custom(isValidRole),
     validateFields,
   ],
-  putUsers
+  updateUser
 );
-router.post(
+
+router_users.post(
   "/",
   [
     check("name", "El nombre es obligatorio").not().isEmpty(),
@@ -52,9 +54,10 @@ router.post(
     // check('role', 'No es un rol válido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
     validateFields,
   ],
-  postUsers
+  createNewUser
 );
-router.delete(
+
+router_users.delete(
   "/:id",
   [
     validateJWT,
@@ -66,6 +69,7 @@ router.delete(
   ],
   deleteUsers
 );
-router.patch("/", patchUsers);
 
-export default router;
+router_users.patch("/", patchUsers);
+
+export default router_users;
