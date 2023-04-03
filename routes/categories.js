@@ -4,10 +4,12 @@ import {
   createCategory,
   getCategories,
   getCategoryById,
+  updateCategory,
+  deleteCategory,
 } from "../controllers/categories.js";
 import { existCategoryById } from "../helpers/db-validators.js";
 
-import { validateJWT, validateFields } from "../middlewares/index.js";
+import { validateJWT, validateFields, hasAdminRole } from "../middlewares/index.js";
 
 export const router_categories = Router();
 
@@ -18,30 +20,40 @@ router_categories.get("/", getCategories);
 router_categories.get(
   "/:id",
   [
-    check('id').custom(existCategoryById)
-  ],
-  getCategoryById
-);
-
-// Crear categoria - privado - cualquier persona con un token valido
-router_categories.post(
-  "/",
-  [
-    validateJWT,
-    check("name", "El nombre es obligatorio").not().isEmpty(),
+    check("id", "No es un id de Mongo válido").isMongoId(),
+    check("id").custom(existCategoryById),
     validateFields,
   ],
-  createCategory
+  getCategoryById
+  );
+  
+  // Crear categoria - privado - cualquier persona con un token valido
+  router_categories.post(
+    "/",
+    [
+      validateJWT,
+      check("name", "El nombre es obligatorio").not().isEmpty(),
+      validateFields,
+    ],
+    createCategory
 );
 
 // Actualizar categoria - privado - cualquier persona con un token valido
-router_categories.put("/:id", (req, res) => {
-  res.json("put");
-});
+router_categories.put("/:id", [
+  validateJWT,
+  check("category", "No es un id de Mongo").isMongoId(),
+  check("name", "El nombre es obligatorio").not().isEmpty(),
+  check("id").custom(existCategoryById),
+  validateFields,
+], updateCategory);
 
 // Borrar una categoria - Administrador
-router_categories.delete("/:id", (req, res) => {
-  res.json("delete");
-});
+router_categories.delete("/:id", [
+  validateJWT,
+  hasAdminRole,
+  check("id", "No es un id de Mongo válido").isMongoId(),
+  check("id").custom(existCategoryById),
+  validateFields
+],deleteCategory);
 
 export default router_categories;

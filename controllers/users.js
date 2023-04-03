@@ -70,15 +70,16 @@ const createNewUser = async (req = request, res = response) => {
  */
 const deleteUsers = async (req, res = response) => {
   const { id } = req.params;
-  
+
   // const uid = req.uid;
-  
+
   //! Borrar fisicamente (no recomendado)
   // const user = await User.findByIdAndDelete(id);
-  
+
   //* Borrando cambiando el estado (recomendado)
+  //* Asi mantenemos la integridad referencial
   const user = await User.findByIdAndUpdate(id, { state: false });
-  
+
   res.json(user);
 };
 

@@ -1,9 +1,12 @@
 import express from "express";
 import cors from "cors";
-
-import { router_users } from "../routes/users.js";
-import { router_auth } from "../routes/auth.js";
-import { router_categories } from "../routes/categories.js";
+import {
+  router_users,
+  router_auth,
+  router_categories,
+  router_products,
+  router_search,
+} from "../routes/index.js";
 import { dbConnection } from "../database/config.js";
 
 class Server {
@@ -12,9 +15,11 @@ class Server {
     this.port = process.env.PORT;
 
     this.paths = {
-      auth:       "/api/auth",
+      auth: "/api/auth",
       categories: "/api/categories",
-      users:      "/api/users"
+      users: "/api/users",
+      products: "/api/products",
+      search: "/api/search",
     };
 
     // Conectar a la base de datos
@@ -52,6 +57,8 @@ class Server {
     this.app.use(this.paths.users, router_users);
     this.app.use(this.paths.auth, router_auth);
     this.app.use(this.paths.categories, router_categories);
+    this.app.use(this.paths.products, router_products);
+    this.app.use(this.paths.search, router_search);
   }
 
   listen() {
