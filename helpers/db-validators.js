@@ -40,6 +40,20 @@ const existProductById = async (id) => {
   }
 };
 
+/**
+ * Valida las colecciones permitidas
+ */
+const allowedCollections = (collection = "", collections = []) => {
+  const included = collections.includes(collection);
+  if (!included) {
+    throw new Error(
+      `La colección ${collection} no está permitida - colecciones permitidas: ${collections}`
+    );
+  }
+
+  return true;
+};
+
 // TODO: Implementar esta validacion
 const validarJSON = (err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
@@ -54,4 +68,5 @@ export {
   existUserById,
   existCategoryById,
   existProductById,
+  allowedCollections,
 };
