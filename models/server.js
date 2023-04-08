@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import fileUpload from "express-fileupload";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 import {
   router_users,
@@ -11,11 +13,14 @@ import {
   router_uploads,
 } from "../routes/index.js";
 import { dbConnection } from "../database/config.js";
+import { socketController } from "../sockets/controller.js";
 
-class Server {
+class RestServer {
   constructor() {
     this.app = express();
-    this.port = process.env.PORT;
+    this.port = process.env.PORT || 8080;
+    this.server = createServer(this.app);
+    this.io = new Server(this.server);
 
     this.paths = {
       auth: "/api/auth",
@@ -34,6 +39,9 @@ class Server {
 
     //Rutas de la aplicación
     this.routes();
+
+    // Sockets
+    this.sockets();
   }
 
   /**
@@ -58,7 +66,7 @@ class Server {
       fileUpload({
         useTempFiles: true,
         tempFileDir: "/tmp/",
-        createParentPath: true
+        createParentPath: true,
       })
     );
   }
@@ -75,11 +83,15 @@ class Server {
     this.app.use(this.paths.uploads, router_uploads);
   }
 
+  sockets() {
+    this.io.on("connection", (socket) => socketController(socket, this.io));
+  }
+
   listen() {
-    this.app.listen(this.port, () => {
+    this.server.listen(this.port, () => {
       console.log("Servidor corriendo en el puerto", this.port);
     });
   }
 }
 
-export default Server;
+export default RestServer;

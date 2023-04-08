@@ -70,7 +70,7 @@ const googleSignIn = async (req, res = repsonse) => {
         password: ":p",
         img,
         google: true,
-        role: "USER_ROLE"
+        role: "USER_ROLE",
       };
 
       user = new User(data);
@@ -96,4 +96,19 @@ const googleSignIn = async (req, res = repsonse) => {
   }
 };
 
-export { login, googleSignIn };
+/**
+ * Se encarga de validar el token del usuario y de ser necesario, lo renueva
+ */
+const renewToken = async(req, res = response) => {
+  const { user } = req;
+
+  //* Generar el JWT
+  const token = await generateJWT(user.id);
+
+  res.json({
+    user,
+    token
+  });
+};
+
+export { login, googleSignIn, renewToken };

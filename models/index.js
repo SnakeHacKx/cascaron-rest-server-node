@@ -1,13 +1,15 @@
 import Category from './category.js';
 import Role from './role.js';
-import Server from './server.js';
+import RestServer from './server.js';
 import User from './user.js';
 import Product from './product.js';
+import Chat from './chat.js';
  
 export {
     Category,
     Role,
-    Server,
+    RestServer as Server,
     User,
-    Product
+    Product,
+    Chat
 }
