@@ -44,6 +44,8 @@ const login = async (req, res = response) => {
     //   msg: "login ok"
     // });
 
+    console.log("REVONANDO TOKEN AL USUYARIO: ", user);
+
     res.json({
       user,
       token,
@@ -104,6 +106,8 @@ const renewToken = async(req, res = response) => {
 
   //* Generar el JWT
   const token = await generateJWT(user.id);
+
+  console.log("REVONANDO TOKEN AL USUYARIO: ", user);
 
   res.json({
     user,

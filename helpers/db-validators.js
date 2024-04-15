@@ -17,6 +17,9 @@ const emailAlreadyExists = async (email = "") => {
 };
 
 const existUserById = async (id) => {
+  
+  // console.log(typeof id);
+
   const userExists = await User.findById(id);
 
   if (!userExists) {
